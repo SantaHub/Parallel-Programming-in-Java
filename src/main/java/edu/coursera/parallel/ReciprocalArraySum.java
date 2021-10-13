@@ -130,13 +130,14 @@ public final class ReciprocalArraySum {
 
         @Override
         protected void compute() {
-            if(endIndexExclusive-startIndexInclusive <= 1000) {
+            if(endIndexExclusive-startIndexInclusive <= THRESHOLD) {
                 for(int i=startIndexInclusive; i < endIndexExclusive ; i++){
                     value += 1/ input[i];
                 }
             } else {
-                ReciprocalArraySumTask left = new ReciprocalArraySumTask(startIndexInclusive, (startIndexInclusive + endIndexExclusive) / 2, input);
-                ReciprocalArraySumTask right = new ReciprocalArraySumTask((startIndexInclusive + endIndexExclusive) / 2, endIndexExclusive, input);
+                int midPoint = (endIndexExclusive + startIndexInclusive) / 2;
+                ReciprocalArraySumTask left = new ReciprocalArraySumTask(startIndexInclusive, midPoint, input);
+                ReciprocalArraySumTask right = new ReciprocalArraySumTask(midPoint, endIndexExclusive, input);
                 left.fork();
                 right.compute();
                 left.join();
@@ -156,15 +157,8 @@ public final class ReciprocalArraySum {
      * @return The sum of the reciprocals of the array input
      */
     protected static double parArraySum(final double[] input) {
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism","4");
         assert input.length % 2 == 0;
-        long startTime = System.nanoTime();
-        ReciprocalArraySumTask reciprocalArraySumTask = new ReciprocalArraySumTask(0, input.length, input);
-        ForkJoinPool.commonPool().invoke(reciprocalArraySumTask);
-        double sum = reciprocalArraySumTask.value;
-        long timeNano = System.nanoTime() - startTime;
-        printResult("ParArraySum", timeNano, sum);
-        return sum;
+        return parManyTaskArraySum(input, 2);
     }
 
     /**
@@ -181,19 +175,15 @@ public final class ReciprocalArraySum {
             final int numTasks) {
         double sum = 0;
 
-        // Compute sum of reciprocals of array elements
-        for (int i = 0; i < input.length; i++) {
-            sum += 1 / input[i];
-        }
-        int chunkSize = 10000;
-        for(int i=0; i < numTasks-1; i++){
-            sum+= parArraySum(Arrays.copyOfRange(input, i*chunkSize, (i+1)*chunkSize ));
-        }
+        ForkJoinPool pool = new ForkJoinPool(numTasks);
+        ReciprocalArraySumTask reciprocalArraySumTask = new ReciprocalArraySumTask(0, input.length, input);
+        pool.invoke(reciprocalArraySumTask);
+        sum = reciprocalArraySumTask.getValue();
 
         return sum;
     }
 
     private static void printResult(String name, long time, double sum){
-        System.out.printf("%s completed in %8.3f milisecond, with sum = %8.5f \n", name, time/1e6, sum);
+        System.out.printf("%s completed in %8.3f millisecond, with sum = %8.5f \n", name, time/1e6, sum);
     }
 }
