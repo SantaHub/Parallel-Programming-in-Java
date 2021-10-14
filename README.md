@@ -15,3 +15,5 @@ Finish : Specify the scope of the parallism. implemented as join() in java.
 Future Objects : Used to store a handle to access values of functions that will return values in future. They are single assign only, like a final variable.
 
 .get() method : gets the value of the future tasks. It will stop the execution flow for the task to be completed and returned the value. Any statement after .get() will only be excuted once the task is completed. It helps to avoid race conditions
+
+Memoization : the futures are stored in a datastructure and called when required again. On the lookup, we use .get().
