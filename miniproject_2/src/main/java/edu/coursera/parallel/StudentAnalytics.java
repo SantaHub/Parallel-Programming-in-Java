@@ -45,11 +45,11 @@ public final class StudentAnalytics {
     public double averageAgeOfEnrolledStudentsParallelStream(
             final Student[] studentArray) {
 //        throw new UnsupportedOperationException();
-        double averagAge = 0;
-        Stream.of(studentArray).parallel()
+        double averagAge =  Stream.of(studentArray).parallel()
                 .filter(student -> student.checkIsCurrent())
-                .
-        return 0;
+                .mapToDouble(activeStudents -> activeStudents.getAge())
+                .average().getAsDouble();
+        return averagAge;
     }
 
     /**
