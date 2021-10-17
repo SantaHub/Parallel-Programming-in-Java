@@ -18,6 +18,12 @@ Future Objects : Used to store a handle to access values of functions that will 
 
 Memoization : the futures are stored in a datastructure and called when required again. On the lookup, we use .get().
 
+Streams :
+    Java 8 API introduced to work on parallel tasks.
+    Steam : a sequence of elements
+    Intermediate operations : operations like filter that will create a new stream.
+    Terminal Operation : A final opeartion that can produce non-stream values as result.
+
 Determinism : 
     Functional Determinism : Always computes the same answer when given the same input
     Structual Determinism : Computes same computational graph when given the same input.
