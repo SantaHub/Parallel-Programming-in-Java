@@ -1,4 +1,4 @@
-package edu.coursera.parallel;
+package edu.coursera.cs608;
 
 public class SLLnoTail {
 
