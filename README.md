@@ -30,3 +30,14 @@ Determinism :
 To avoid data race, a program should be functionally and structually deterministic.
 Benign nondeterminim : for same inpu may generate different outputs. But all the outputs maybe acceptable. Eg. search pattern match locations in a string.
 
+## Week 3
+
+Parallel Loops :
+    There are there ways in java to parallize :
+    - Each iteration an async task with finish encompassing all iterations.
+    - Using forall loops
+    - using stream().parallel()
+
+Parallel Matrix :
+    We can parallize the matrix computation except for the seq summation thats computationally non-associative even though its algebrically associative.
+
